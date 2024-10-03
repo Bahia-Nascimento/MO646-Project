@@ -4,7 +4,7 @@ def price(previousSales, currentPrice, passengers, points):
     if passengers > 4:
         finalPrice = finalPrice * 0.95
     if points > 0:
-        finalPrice = finalPrice - points * 0.1
+        finalPrice = finalPrice - points * 0.01
     return finalPrice
 
 while True:
@@ -12,4 +12,5 @@ while True:
     currentPrice = float(input("Enter current price: "))
     passengers = int(input("Enter number of passengers: "))
     points = int(input("Enter points: "))
-    print(price(previousSales, currentPrice, passengers, points))
+    fee = int(input("Last-Minute Fee? (0/1): "))
+    print(price(previousSales, currentPrice, passengers, points) + (fee * 100))

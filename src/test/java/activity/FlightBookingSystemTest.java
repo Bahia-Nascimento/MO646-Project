@@ -31,6 +31,7 @@ public class FlightBookingSystemTest {
 
     @Test
     public void testCase1() {
+        // Passengers edge value case.
         Flight flight = new Flight();
         flight.passengers = 1;
         flight.bookingTime = LocalDateTime.now();
@@ -52,13 +53,14 @@ public class FlightBookingSystemTest {
 
     @Test
     public void testCase2() {
+        // Valid cancellation case. Half refund. Points and available seats DO NOT MATTER.
         Flight flight = new Flight();
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
         flight.departureTime = LocalDateTime.now().plusHours(20);
         flight.availableSeats = 1;
         flight.currentPrice = 500;
-        flight.previousSales = 1;
+        flight.previousSales = 10;
         flight.isCancellation = true;
         flight.rewardPointsAvailable = 10;
         
@@ -66,13 +68,14 @@ public class FlightBookingSystemTest {
         flight.currentPrice, flight.previousSales, flight.isCancellation, flight.departureTime, flight.rewardPointsAvailable);
         
         assertTrue(result.confirmation);
-        assertEquals(7.9, result.totalPrice, 0.01);
-        assertEquals(0, result.pointsUsed);
-        assertEquals(3.95, result.refundAmount, 0.01);
+        assertEquals(179.9, result.totalPrice, 0.01);
+        assertEquals(10, result.pointsUsed);
+        assertEquals(89.95, result.refundAmount, 0.01);
     }
 
     @Test
     public void testCase3() {
+        // Valid cancellation case. Full refund. Points and available seats DO NOT MATTER.
         Flight flight = new Flight();
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
@@ -94,10 +97,99 @@ public class FlightBookingSystemTest {
 
     @Test
     public void testCase4() {
+        // Previous sales edge value case.
         Flight flight = new Flight();
-        flight.passengers = 1;
+        flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
         flight.departureTime = LocalDateTime.now().plusHours(25);
+        flight.availableSeats = 10;
+        flight.currentPrice = 500;
+        flight.previousSales = 0;
+        flight.isCancellation = false;
+        flight.rewardPointsAvailable = 0;
+        
+        FlightBookingSystem.BookingResult result = flightBookingSystem.bookFlight(flight.passengers, flight.bookingTime, flight.availableSeats,
+        flight.currentPrice, flight.previousSales, flight.isCancellation, flight.departureTime, flight.rewardPointsAvailable);
+        
+        assertTrue(result.confirmation);
+        assertEquals(0, result.totalPrice, 0.01);
+        assertEquals(0, result.pointsUsed);
+        assertEquals(0, result.refundAmount, 0.01);
+    }
+
+    @Test
+    public void testCase5() {
+        // Previous sales edge value case.
+        Flight flight = new Flight();
+        flight.passengers = 2;
+        flight.bookingTime = LocalDateTime.now();
+        flight.departureTime = LocalDateTime.now().plusHours(25);
+        flight.availableSeats = 10;
+        flight.currentPrice = 500;
+        flight.previousSales = 1;
+        flight.isCancellation = false;
+        flight.rewardPointsAvailable = 0;
+        
+        FlightBookingSystem.BookingResult result = flightBookingSystem.bookFlight(flight.passengers, flight.bookingTime, flight.availableSeats,
+        flight.currentPrice, flight.previousSales, flight.isCancellation, flight.departureTime, flight.rewardPointsAvailable);
+        
+        assertTrue(result.confirmation);
+        assertEquals(8, result.totalPrice, 0.01);
+        assertEquals(0, result.pointsUsed);
+        assertEquals(0, result.refundAmount, 0.01);
+    }
+
+    @Test
+    public void testCase6() {
+        // Points available edge value case.
+        Flight flight = new Flight();
+        flight.passengers = 2;
+        flight.bookingTime = LocalDateTime.now();
+        flight.departureTime = LocalDateTime.now().plusHours(25);
+        flight.availableSeats = 10;
+        flight.currentPrice = 500;
+        flight.previousSales = 10;
+        flight.isCancellation = false;
+        flight.rewardPointsAvailable = 1;
+        
+        FlightBookingSystem.BookingResult result = flightBookingSystem.bookFlight(flight.passengers, flight.bookingTime, flight.availableSeats,
+        flight.currentPrice, flight.previousSales, flight.isCancellation, flight.departureTime, flight.rewardPointsAvailable);
+        
+        assertTrue(result.confirmation);
+        assertEquals(79.99, result.totalPrice, 0.01);
+        assertEquals(0, result.pointsUsed);
+        assertEquals(0, result.refundAmount, 0.01);
+    }
+
+    @Test
+    public void testCase7() {
+        // Valid 500 points case
+        Flight flight = new Flight();
+        flight.passengers = 2;
+        flight.bookingTime = LocalDateTime.now();
+        flight.departureTime = LocalDateTime.now().plusHours(25);
+        flight.availableSeats = 10;
+        flight.currentPrice = 500;
+        flight.previousSales = 10;
+        flight.isCancellation = false;
+        flight.rewardPointsAvailable = 500;
+        
+        FlightBookingSystem.BookingResult result = flightBookingSystem.bookFlight(flight.passengers, flight.bookingTime, flight.availableSeats,
+        flight.currentPrice, flight.previousSales, flight.isCancellation, flight.departureTime, flight.rewardPointsAvailable);
+        
+        assertTrue(result.confirmation);
+        assertEquals(75, result.totalPrice, 0.01);
+        assertEquals(0, result.pointsUsed);
+        assertEquals(0, result.refundAmount, 0.01);
+    }
+
+    @Test
+    public void testCase8() {
+        // Valid Last-Minute fee case
+        Flight flight = new Flight();
+        flight.passengers = 2;
+        flight.bookingTime = LocalDateTime.now();
+        flight.departureTime = LocalDateTime.now().plusHours(20);
         flight.availableSeats = 10;
         flight.currentPrice = 500;
         flight.previousSales = 10;
@@ -108,11 +200,11 @@ public class FlightBookingSystemTest {
         flight.currentPrice, flight.previousSales, flight.isCancellation, flight.departureTime, flight.rewardPointsAvailable);
         
         assertTrue(result.confirmation);
-        assertEquals(40, result.totalPrice, 0.01);
+        assertEquals(180, result.totalPrice, 0.01);
         assertEquals(0, result.pointsUsed);
         assertEquals(0, result.refundAmount, 0.01);
     }
-    // TODO: cancellation regardless of points, one for each sales condition, cancellation with earlier than now date
+    // TODO: awaiting further instructions about cancellation policy
 
     // Failures
     @Test
