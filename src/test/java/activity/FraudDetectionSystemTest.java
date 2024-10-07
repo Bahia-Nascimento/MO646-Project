@@ -7,7 +7,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -17,7 +17,7 @@ public class FraudDetectionSystemTest {
     private List<FraudDetectionSystem.Transaction> previousTransactions;
     private List<String> blacklistedLocations;
 
-    @Before
+    @BeforeEach
     void setup() {
         system = new FraudDetectionSystem();
         previousTransactions = new ArrayList<>();

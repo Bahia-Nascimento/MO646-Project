@@ -1,7 +1,7 @@
 package activity;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.Before;
 import java.time.LocalDateTime;
 
 
@@ -22,7 +22,7 @@ public class FlightBookingSystemTest {
     private FlightBookingSystem flightBookingSystem;
     private Flight flight;
     
-    @Before
+    @BeforeEach
     void setUp() {
         flightBookingSystem = new FlightBookingSystem();
         flight = new Flight();
