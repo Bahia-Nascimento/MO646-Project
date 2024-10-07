@@ -1,6 +1,6 @@
 package activity;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.Before;
 import java.time.LocalDateTime;
 
@@ -23,14 +23,14 @@ public class FlightBookingSystemTest {
     private Flight flight;
     
     @Before
-    public void setUp() {
+    void setUp() {
         flightBookingSystem = new FlightBookingSystem();
         flight = new Flight();
     }
     
 
     @Test
-    public void testCase1() {
+    void testCase1() {
         // Passengers edge value case.
         flight.passengers = 1;
         flight.bookingTime = LocalDateTime.now();
@@ -51,7 +51,7 @@ public class FlightBookingSystemTest {
     }
 
     @Test
-    public void testCase2() {
+    void testCase2() {
         //  Will return 0 refund because passengers < available seats. but that should not matter in a cancelattion. ERROR DETECTED
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
@@ -72,7 +72,7 @@ public class FlightBookingSystemTest {
     }
 
     @Test
-    public void testCase3() {
+    void testCase3() {
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
         flight.departureTime = LocalDateTime.now().plusHours(50);
@@ -92,7 +92,7 @@ public class FlightBookingSystemTest {
     }
 
     @Test
-    public void testCase4() {
+    void testCase4() {
         // Previous sales edge value case.
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
@@ -113,7 +113,7 @@ public class FlightBookingSystemTest {
     }
 
     @Test
-    public void testCase5() {
+    void testCase5() {
         // Previous sales edge value case.
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
@@ -134,7 +134,7 @@ public class FlightBookingSystemTest {
     }
 
     @Test
-    public void testCase6() {
+    void testCase6() {
         // Points available edge value case.
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
@@ -155,7 +155,7 @@ public class FlightBookingSystemTest {
     }
 
     @Test
-    public void testCase7() {
+    void testCase7() {
         // Valid 500 points case
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
@@ -176,7 +176,7 @@ public class FlightBookingSystemTest {
     }
 
     @Test
-    public void testCase8() {
+    void testCase8() {
         // Valid Last-Minute fee case
         flight.passengers = 2;
         flight.bookingTime = LocalDateTime.now();
@@ -197,7 +197,7 @@ public class FlightBookingSystemTest {
     }
 
     // @Test
-    // public void testCase9() {
+    // void testCase9() {
     //     //  Will return 0 refund because passengers < available seats. but that should not matter in a cancelattion. ERROR DETECTED
     //     flight.passengers = 2;
     //     flight.bookingTime = LocalDateTime.now();
@@ -219,7 +219,7 @@ public class FlightBookingSystemTest {
 
     // Failures
     // @Test
-    // public void testCaseFail1() {
+    // void testCaseFail1() {
     //     //  Should not confirm because there are no passengers. ERROR DETECTED
     //     flight.passengers = 0;
     //     flight.bookingTime = LocalDateTime.now();
@@ -240,7 +240,7 @@ public class FlightBookingSystemTest {
     // }
 
     // @Test
-    // public void testCaseFail2() {
+    // void testCaseFail2() {
     //     //  Should not confirm because there are negative passengers. ERROR DETECTED
     //     flight.passengers = -1;
     //     flight.bookingTime = LocalDateTime.now();
@@ -261,7 +261,7 @@ public class FlightBookingSystemTest {
     // }
 
     // @Test
-    // public void testCaseFail3() {
+    // void testCaseFail3() {
     //     //  Should not confirm because the booking time is after the departure time. ERROR DETECTED
     //     flight.passengers = 1;
     //     flight.departureTime = LocalDateTime.now().plusDays(3);
@@ -282,7 +282,7 @@ public class FlightBookingSystemTest {
     // }
     
     // @Test
-    // public void testCaseFail4() {
+    // void testCaseFail4() {
     //     //  Should not confirm because the departure time is before the booking time. ERROR DETECTED
     //     flight.passengers = 1;
     //     flight.bookingTime = LocalDateTime.now();
@@ -303,7 +303,7 @@ public class FlightBookingSystemTest {
     // }
     
     // @Test
-    // public void testCaseFail5() {
+    // void testCaseFail5() {
     //     //  Should not confirm because the booking time is the same as the departure time. ERROR DETECTED
     //     flight.passengers = 1;
     //     flight.bookingTime = LocalDateTime.now();
@@ -324,7 +324,7 @@ public class FlightBookingSystemTest {
     // }
     
     @Test
-    public void testCaseFail6() {
+    void testCaseFail6() {
         // Will work as expected, but likely because passengers < availableSeats, which fails automatically. ERROR PROBABLY DETECTED
         flight.passengers = 1;
         flight.bookingTime = LocalDateTime.now();
@@ -345,7 +345,7 @@ public class FlightBookingSystemTest {
     }
     
     // @Test
-    // public void testCaseFail7() {
+    // void testCaseFail7() {
     //     //  Should not confirm because of negative current price. ERROR DETECTED
     //     flight.passengers = 1;
     //     flight.bookingTime = LocalDateTime.now();
@@ -366,7 +366,7 @@ public class FlightBookingSystemTest {
     // }
     
     // @Test
-    // public void testCaseFail8() {
+    // void testCaseFail8() {
     //     //  Should not confirm because of negative previous sales. ERROR DETECTED
     //     flight.passengers = 1;
     //     flight.bookingTime = LocalDateTime.now();
@@ -387,7 +387,7 @@ public class FlightBookingSystemTest {
     // }
     
     // @Test
-    // public void testCaseFail9() {
+    // void testCaseFail9() {
     //     // Should not confirm because of negative reward points. ERROR DETECTED
     //     flight.passengers = 1;
     //     flight.bookingTime = LocalDateTime.now();

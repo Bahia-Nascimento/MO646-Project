@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 public class FraudDetectionSystemTest {
@@ -18,14 +18,14 @@ public class FraudDetectionSystemTest {
     private List<String> blacklistedLocations;
 
     @Before
-    public void setup() {
+    void setup() {
         system = new FraudDetectionSystem();
         previousTransactions = new ArrayList<>();
         blacklistedLocations = new ArrayList<>();
     }
 
     @Test
-    public void testTransactionAboveLimit() {
+    void testTransactionAboveLimit() {
         FraudDetectionSystem.Transaction transaction = 
             new FraudDetectionSystem.Transaction(10001.00, LocalDateTime.now(), "BRAZIL");
 
@@ -38,7 +38,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testTransactionInLimit() {
+    void testTransactionInLimit() {
         FraudDetectionSystem.Transaction transaction = 
             new FraudDetectionSystem.Transaction(10000.00, LocalDateTime.now(), "BRAZIL");
 
@@ -51,7 +51,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testExcessiveTransactionsWithinShortTime() {
+    void testExcessiveTransactionsWithinShortTime() {
         LocalDateTime now = LocalDateTime.now();
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(13), "BRAZIL"));
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(12), "BRAZIL"));
@@ -76,7 +76,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testExcessiveTransactionsWithinLargeTime() {
+    void testExcessiveTransactionsWithinLargeTime() {
         LocalDateTime now = LocalDateTime.now();
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(130), "BRAZIL"));
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(120), "BRAZIL"));
@@ -101,7 +101,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testLocationChangeWithinShortTime() {
+    void testLocationChangeWithinShortTime() {
         LocalDateTime now = LocalDateTime.now();
         previousTransactions.add(new FraudDetectionSystem.Transaction(100.00, now.minusMinutes(20), "BRAZIL"));
         FraudDetectionSystem.Transaction currentTransaction = new FraudDetectionSystem.Transaction(200.00, now, "PERU");
@@ -115,7 +115,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testLocationSameWithinShortTime() {
+    void testLocationSameWithinShortTime() {
         LocalDateTime now = LocalDateTime.now();
         previousTransactions.add(new FraudDetectionSystem.Transaction(100.00, now.minusMinutes(20), "BRAZIL"));
         FraudDetectionSystem.Transaction currentTransaction = new FraudDetectionSystem.Transaction(200.00, now, "BRAZIL");
@@ -129,7 +129,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testTransactionFromBlacklistedLocation() {
+    void testTransactionFromBlacklistedLocation() {
         blacklistedLocations.add("UNITED STATES");
         FraudDetectionSystem.Transaction transaction = 
             new FraudDetectionSystem.Transaction(5000.00, LocalDateTime.now(), "UNITED STATES");
@@ -143,7 +143,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testTransactionOutsideBlacklistedLocation() {
+    void testTransactionOutsideBlacklistedLocation() {
         blacklistedLocations.add("UNITED STATES");
         FraudDetectionSystem.Transaction transaction = 
             new FraudDetectionSystem.Transaction(5000.00, LocalDateTime.now(), "BRAZIL");
@@ -157,7 +157,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testFraudAboveLimitExcessiveTransactionsWithinShortTime() {
+    void testFraudAboveLimitExcessiveTransactionsWithinShortTime() {
         LocalDateTime now = LocalDateTime.now();
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(13), "BRAZIL"));
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(12), "BRAZIL"));
@@ -182,7 +182,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testFraudAboveLimitLocationChange() {
+    void testFraudAboveLimitLocationChange() {
         LocalDateTime now = LocalDateTime.now();
         previousTransactions.add(new FraudDetectionSystem.Transaction(100.00, now.minusMinutes(20), "BRAZIL"));
         FraudDetectionSystem.Transaction currentTransaction = new FraudDetectionSystem.Transaction(10001.00, now, "PERU");
@@ -196,7 +196,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testFraudAboveLimitBlacklistedLocation() {
+    void testFraudAboveLimitBlacklistedLocation() {
         blacklistedLocations.add("UNITED STATES");
         FraudDetectionSystem.Transaction transaction = 
             new FraudDetectionSystem.Transaction(10001.00, LocalDateTime.now(), "UNITED STATES");
@@ -210,7 +210,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testExcessiveTransactionsWithinShortTimeLocationChange() {
+    void testExcessiveTransactionsWithinShortTimeLocationChange() {
         LocalDateTime now = LocalDateTime.now();
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(13), "BRAZIL"));
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(12), "BRAZIL"));
@@ -235,7 +235,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testExcessiveTransactionsBlacklistedLocation() {
+    void testExcessiveTransactionsBlacklistedLocation() {
         LocalDateTime now = LocalDateTime.now();
         blacklistedLocations.add("UNITED STATES");
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(55), "BRAZIL"));
@@ -261,7 +261,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testLocationChangeBlacklistedLocation() {
+    void testLocationChangeBlacklistedLocation() {
         LocalDateTime now = LocalDateTime.now();
         blacklistedLocations.add("UNITED STATES");
         previousTransactions.add(new FraudDetectionSystem.Transaction(100.00, now.minusMinutes(20), "BRAZIL"));
@@ -276,7 +276,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testFraudAboveLimitExcessiveTransactionsWithinShortTimeLocationChange() {
+    void testFraudAboveLimitExcessiveTransactionsWithinShortTimeLocationChange() {
         LocalDateTime now = LocalDateTime.now();
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(13), "BRAZIL"));
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(12), "BRAZIL"));
@@ -301,7 +301,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testFraudAboveLimitExcessiveTransactionsWithinShortTimeBlacklistedLocation() {
+    void testFraudAboveLimitExcessiveTransactionsWithinShortTimeBlacklistedLocation() {
         LocalDateTime now = LocalDateTime.now();
         blacklistedLocations.add("UNITED STATES");
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(13), "BRAZIL"));
@@ -327,7 +327,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testFraudAboveLimitLocationChangeBlacklistedLocation() {
+    void testFraudAboveLimitLocationChangeBlacklistedLocation() {
         LocalDateTime now = LocalDateTime.now();
         blacklistedLocations.add("UNITED STATES");
         previousTransactions.add(new FraudDetectionSystem.Transaction(100.00, now.minusMinutes(20), "BRAZIL"));
@@ -342,7 +342,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testFraudExcessiveTransactionsWithinShortTimeLocationChangeBlacklistedLocation() {
+    void testFraudExcessiveTransactionsWithinShortTimeLocationChangeBlacklistedLocation() {
         LocalDateTime now = LocalDateTime.now();
         blacklistedLocations.add("UNITED STATES");
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(13), "BRAZIL"));
@@ -368,7 +368,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testAllRuleBroked(){
+    void testAllRuleBroked(){
         LocalDateTime now = LocalDateTime.now();
         blacklistedLocations.add("UNITED STATES");
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(13), "BRAZIL"));
@@ -394,7 +394,7 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testAllRulesCorrect(){
+    void testAllRulesCorrect(){
         LocalDateTime now = LocalDateTime.now();
         blacklistedLocations.add("UNITED STATES");
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(130), "BRAZIL"));
