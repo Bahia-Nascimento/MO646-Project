@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SmartEnergyManagementSystemTest {
+class SmartEnergyManagementSystemTest {
     private SmartEnergyManagementSystem system;
     private Map<String, Integer> devicePriorities;
     private List<SmartEnergyManagementSystem.DeviceSchedule> scheduledDevices;

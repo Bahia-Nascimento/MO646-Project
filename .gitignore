@@ -38,4 +38,9 @@ build/
 ### Mac OS ###
 .DS_Store
 
+<<<<<<< HEAD
 token.txt
+=======
+token.txt
+sonar-project.properties
+>>>>>>> 0537eba (line coverage count finally working)

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-public class FraudDetectionSystemTest {
+class FraudDetectionSystemTest {
 
     private FraudDetectionSystem system;
     private List<FraudDetectionSystem.Transaction> previousTransactions;
