@@ -13,7 +13,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.login>sqp_9a00df7cbe635841c6d1d7b48f3cd56a9ae7dc4c</sonar.login>
+        <sonar.login>sqp_83947226e28323a0a10e5c60212b9d3fa312482b</sonar.login>
         <sonar.projectKey>atv4</sonar.projectKey>
         <sonar.projectName>MO646-Activity</sonar.projectName>
         <sonar.sources>src/main/java</sonar.sources>
