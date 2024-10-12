@@ -7,7 +7,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import java.time.ZoneOffset;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -421,7 +420,31 @@ public class FraudDetectionSystemTest {
     }
 
     @Test
-    public void testKillMutant(){
+    public void testKillMutant1(){
+        LocalDateTime now = LocalDateTime.now();
+        blacklistedLocations.add("UNITED STATES");
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
+        FraudDetectionSystem.Transaction currentTransaction = new FraudDetectionSystem.Transaction(10000.00, now, "BRAZIL");
+
+        FraudDetectionSystem.FraudCheckResult result = system.checkForFraud(currentTransaction, previousTransactions, blacklistedLocations);
+
+        assertFalse(result.isFraudulent);
+        assertTrue(result.isBlocked);
+        assertFalse(result.verificationRequired);
+        assertEquals(30, result.riskScore);
+    }
+    @Test
+    public void testKillMutant2(){
         LocalDateTime now = LocalDateTime.now();
         blacklistedLocations.add("UNITED STATES");
         previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, now.minusMinutes(60), "BRAZIL"));
@@ -442,32 +465,5 @@ public class FraudDetectionSystemTest {
         assertFalse(result.isBlocked);
         assertFalse(result.verificationRequired);
         assertEquals(0, result.riskScore);
-    }
-    @Test
-    public void testKillMutant2(){
-        long randomTimestamp = 1696843080L; 
-        LocalDateTime randomTime = LocalDateTime.ofEpochSecond(randomTimestamp, 0, ZoneOffset.UTC);
-        
-        blacklistedLocations.add("UNITED STATES");
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        previousTransactions.add(new FraudDetectionSystem.Transaction(500.00, randomTime.minusMinutes(60), "BRAZIL"));
-        
-        FraudDetectionSystem.Transaction currentTransaction = new FraudDetectionSystem.Transaction(10000.00, randomTime, "BRAZIL");
-    
-        FraudDetectionSystem.FraudCheckResult result = system.checkForFraud(currentTransaction, previousTransactions, blacklistedLocations);
-    
-        assertFalse(result.isFraudulent);
-        assertFalse(result.isBlocked);
-        assertFalse(result.verificationRequired);
-        assertEquals(0, result.riskScore);
-    }
-    
+    }    
 }
