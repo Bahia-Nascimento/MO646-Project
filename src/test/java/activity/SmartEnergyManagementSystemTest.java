@@ -306,4 +306,221 @@ public class SmartEnergyManagementSystemTest {
         assertFalse(result.deviceStatus.get("Lights"));
         assertFalse(result.deviceStatus.get("Appliances"));
     }
+
+    @Test
+    public void testEnergySavingModeWhenPriceEqualsThreshold() {
+        devicePriorities.put("Heating", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.20, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.energySavingMode);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertTrue(result.deviceStatus.get("Lights"));
+        assertTrue(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testEnergySavingModeWhenPriceSlightlyAboveThreshold() {
+        devicePriorities.put("Heating", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.21, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertTrue(result.energySavingMode);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.deviceStatus.get("Lights"));
+        assertFalse(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testEnergySavingModeWhenPriceSlightlyBelowThreshold() {
+        devicePriorities.put("Heating", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.19, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.energySavingMode);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertTrue(result.deviceStatus.get("Lights"));
+        assertTrue(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testHighPriorityDeviceRemainsOn() {
+        devicePriorities.put("Heating", 1);
+        devicePriorities.put("Lights", 1);
+        devicePriorities.put("Appliances", 1);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.25, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertTrue(result.deviceStatus.get("Lights"));
+        assertTrue(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testLowPriorityDeviceTurnsOff() {
+        devicePriorities.put("Heating", 2);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 2);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.25, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.deviceStatus.get("Lights"));
+        assertFalse(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testHighPriorityDeviceRemainsOnWithLowerPriority() {
+        devicePriorities.put("Heating", 0);
+        devicePriorities.put("Lights", 0);
+        devicePriorities.put("Appliances", 0);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.25, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertTrue(result.deviceStatus.get("Lights"));
+        assertTrue(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testNightModeAtExactly11PM() {
+        devicePriorities.put("Security", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.of(2024, 10, 1, 23, 0), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertTrue(result.deviceStatus.get("Security"));
+        assertFalse(result.deviceStatus.get("Lights"));
+        assertFalse(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testNoNightModeAtExactly6AM() {
+        devicePriorities.put("Security", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.of(2024, 10, 1, 6, 0), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertTrue(result.deviceStatus.get("Security"));
+        assertTrue(result.deviceStatus.get("Lights"));
+        assertTrue(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testNoNightModeSlightlyBefore11PM() {
+        devicePriorities.put("Security", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.of(2024, 10, 1, 22, 59), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertTrue(result.deviceStatus.get("Security"));
+        assertTrue(result.deviceStatus.get("Lights"));
+        assertTrue(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testNightModeSlightlyBefore6AM() {
+        devicePriorities.put("Security", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.of(2024, 10, 1, 5, 59), 22.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertTrue(result.deviceStatus.get("Security"));
+        assertFalse(result.deviceStatus.get("Lights"));
+        assertFalse(result.deviceStatus.get("Appliances"));
+    }
+
+    @Test
+    public void testTemperatureAtLowerBoundary() {
+        devicePriorities.put("Heating", 1);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 20.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.temperatureRegulationActive);
+    }
+
+
+    @Test
+    public void testTemperatureSlightlyBelowLowerBoundary() {
+        devicePriorities.put("Heating", 1);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 19.9, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertTrue(result.deviceStatus.get("Heating"));
+        assertTrue(result.temperatureRegulationActive);
+    }
+
+    @Test
+    public void testTemperatureSlightlyAboveLowerBoundary() {
+        devicePriorities.put("Heating", 1);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 20.1, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.temperatureRegulationActive);
+    }
+
+    @Test
+    public void testTemperatureAtUpperBoundary() {
+        devicePriorities.put("Cooling", 1);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 24.0, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Cooling"));
+        assertFalse(result.temperatureRegulationActive);
+    }
+
+    @Test
+    public void testTemperatureSlightlyAboveUpperBoundary() {
+        devicePriorities.put("Cooling", 1);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 24.1, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertTrue(result.deviceStatus.get("Cooling"));
+        assertTrue(result.temperatureRegulationActive);
+    }
+
+    @Test
+    public void testTemperatureSlightlyBelowUpperBoundary() {
+        devicePriorities.put("Cooling", 1);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 23.9, new double[]{20.0, 24.0}, 30, 25, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Cooling"));
+        assertFalse(result.temperatureRegulationActive);
+    }
+
+    @Test
+    public void testEnergyUsageAtLimit() {
+        devicePriorities.put("Heating", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 30, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.deviceStatus.get("Lights"));
+        assertFalse(result.deviceStatus.get("Appliances"));
+        assertEquals(28, result.totalEnergyUsed, 0.01);
+    }
+
+    @Test
+    public void testEnergyUsageSlightlyAboveLimit() {
+        devicePriorities.put("Heating", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 31, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertFalse(result.deviceStatus.get("Lights"));
+        assertFalse(result.deviceStatus.get("Appliances"));
+        assertEquals(29, result.totalEnergyUsed, 0.01);
+    }
+
+    @Test
+    public void testEnergyUsageSlightlyBelowLimit() {
+        devicePriorities.put("Heating", 1);
+        devicePriorities.put("Lights", 2);
+        devicePriorities.put("Appliances", 3);
+        SmartEnergyManagementSystem.EnergyManagementResult result = system.manageEnergy(
+            0.15, 0.20, devicePriorities, LocalDateTime.now(), 22.0, new double[]{20.0, 24.0}, 30, 29, scheduledDevices);
+        assertFalse(result.deviceStatus.get("Heating"));
+        assertTrue(result.deviceStatus.get("Lights"));
+        assertTrue(result.deviceStatus.get("Appliances"));
+        assertEquals(29, result.totalEnergyUsed, 0.01);
+    }
 }
